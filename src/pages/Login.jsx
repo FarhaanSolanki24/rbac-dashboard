@@ -9,6 +9,12 @@ const accounts = [
   { email: "employee@acme.io", password: "employee123", role: "employee", name: "Arjun Desai", avatar: "AD" },
 ];
 
+const roleColors = {
+  admin: { avatar: "bg-indigo-500", badge: "bg-indigo-100 text-indigo-700", border: "hover:border-indigo-200 hover:bg-indigo-50/50" },
+  manager: { avatar: "bg-purple-500", badge: "bg-purple-100 text-purple-700", border: "hover:border-purple-200 hover:bg-purple-50/50" },
+  employee: { avatar: "bg-cyan-500", badge: "bg-cyan-100 text-cyan-700", border: "hover:border-cyan-200 hover:bg-cyan-50/50" },
+};
+
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,20 +91,44 @@ export default function Login() {
           </form>
 
           <div className="mt-5 pt-5 border-t border-slate-100">
-            <p className="text-xs text-slate-400 text-center mb-3 font-medium">Quick login — demo accounts</p>
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide text-center mb-3">Demo Credentials</p>
+
+            <div className="space-y-2 mb-5">
+              {accounts.map((a) => {
+                const c = roleColors[a.role];
+                return (
+                  <div key={a.role} className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                    <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0 ${c.avatar}`}>
+                      {a.avatar}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${c.badge}`}>{a.role}</span>
+                      </div>
+                      <p className="text-xs text-slate-500 font-mono truncate">{a.email} · {a.password}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-xs text-slate-400 text-center mb-3">or click to autofill →</p>
             <div className="grid grid-cols-3 gap-2">
-              {accounts.map((a) => (
-                <button
-                  key={a.role}
-                  onClick={() => quickLogin(a)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/50 transition-all group"
-                >
-                  <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${a.role === "admin" ? "bg-indigo-500" : a.role === "manager" ? "bg-purple-500" : "bg-cyan-500"}`}>
-                    {a.avatar}
-                  </span>
-                  <span className="text-xs font-medium text-slate-600 capitalize">{a.role}</span>
-                </button>
-              ))}
+              {accounts.map((a) => {
+                const c = roleColors[a.role];
+                return (
+                  <button
+                    key={a.role}
+                    onClick={() => quickLogin(a)}
+                    className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border border-slate-100 transition-all ${c.border}`}
+                  >
+                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${c.avatar}`}>
+                      {a.avatar}
+                    </span>
+                    <span className="text-xs font-medium text-slate-600 capitalize">{a.role}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
